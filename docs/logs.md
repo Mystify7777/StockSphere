@@ -528,3 +528,35 @@ Write painful mistakes here so future-you stops behaving like current-you.
 
 ### Next Steps
 - Move to deployment prep and environment hardening
+
+---
+
+## [2026-04-13] Deployment Prep + Public Auth UX Correction
+
+### Completed
+- Replaced hardcoded backend configuration with environment placeholders in backend `application.yml`
+- Added CORS configuration wired to `CORS_ALLOWED_ORIGINS`
+- Added backend Dockerfile for container deployment on Render
+- Verified backend package build (`mvn clean package -DskipTests`)
+- Confirmed frontend API base is env-driven via `VITE_API_BASE_URL`
+- Switched public homepage from JWT debug restore screen to Login/Register flow
+- Added credential-based auth integration using backend `/api/auth/login` and `/api/auth/register`
+- Added route fallback redirect behavior for unknown frontend routes
+- Polished auth landing UX for desktop/mobile and removed debug-facing public text
+- Verified frontend production build after each UX/auth change
+
+### In Progress
+- Production smoke testing after frontend redeploy with live backend URL
+
+### Issues
+- Render runtime required Docker path for reliable Java deployment in this setup
+- Public UX initially exposed a developer token recovery flow; corrected to user-facing onboarding
+
+### Decisions
+- Keep developer token tools out of public homepage
+- Keep backend runtime config fully environment-driven for cloud portability
+- Deploy order locked: backend first, frontend second
+
+### Next Steps
+- Redeploy frontend with `VITE_API_BASE_URL=https://stocksphere-4xt1.onrender.com/api`
+- Execute live test flow: register, login, dashboard, products CRUD, logout, refresh

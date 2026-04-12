@@ -128,14 +128,23 @@ Uses platform for:
 
 - React
 - Vite
-- Tailwind CSS
+- React Router
+- React Toastify
+- Custom CSS
 
 ## Tools
 
 - Postman
 - Git
 - GitHub
-- Docker (later)
+- Docker
+
+---
+
+# Live Deployment
+
+- Frontend: https://stock-sphere-sable.vercel.app/
+- Backend API: https://stocksphere-4xt1.onrender.com/api
 
 ---
 

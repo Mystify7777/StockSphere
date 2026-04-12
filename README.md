@@ -4,6 +4,11 @@ Multi-tenant inventory management platform for shop owners with optional public 
 
 Built for businesses that are tired of managing stock through notebooks, memory, and ritual sacrifice.
 
+Live URLs:
+
+- Frontend: [https://stock-sphere-sable.vercel.app/](https://stock-sphere-sable.vercel.app/)
+- Backend API: [https://stocksphere-4xt1.onrender.com/api](https://stocksphere-4xt1.onrender.com/api)
+
 ---
 
 # Overview
@@ -73,7 +78,9 @@ StockSphere allows users to:
 
 - React
 - Vite
-- Tailwind CSS
+- React Router
+- React Toastify
+- Custom CSS
 
 ## Tools
 
@@ -143,16 +150,44 @@ CREATE DATABASE stocksphere;
 
 3. Configure environment variables
 
-Update:
+Set these values in your environment or hosting dashboard:
 
-```properties
-application.yml
-```
+- DB_HOST
+- DB_PORT
+- DB_NAME
+- DB_USERNAME
+- DB_PASSWORD
+- JWT_SECRET
+- JWT_EXPIRATION_MS
+- CORS_ALLOWED_ORIGINS
 
 4. Run backend
 
 ```bash
 mvn spring-boot:run
+```
+
+Optional package command:
+
+```bash
+mvn clean package -DskipTests
+```
+
+## Backend Docker Deployment
+
+Backend includes a Dockerfile at `backend/Dockerfile` for container deployment.
+
+Build image:
+
+```bash
+cd backend
+docker build -t stocksphere-backend .
+```
+
+Run container:
+
+```bash
+docker run -p 8080:8080 stocksphere-backend
 ```
 
 ---
@@ -171,10 +206,16 @@ npm install
 npm run dev
 ```
 
+For production frontend deploy, set:
+
+```env
+VITE_API_BASE_URL=https://stocksphere-4xt1.onrender.com/api
+```
+
 ## Dashboard Summary UI (Implemented)
 
 - Frontend includes a dashboard cards page that calls `GET /api/dashboard/summary`
-- Paste a Bearer token in the UI and fetch metrics live
+- Login/Register flow with token persistence is implemented
 - Metrics shown:
 	- Total Products
 	- Low Stock Count
@@ -201,6 +242,18 @@ npm run dev
 http://localhost:8080/api
 ```
 
+Production API Base URL:
+
+```txt
+https://stocksphere-4xt1.onrender.com/api
+```
+
+Production Frontend URL:
+
+```txt
+https://stock-sphere-sable.vercel.app/
+```
+
 ---
 
 # Current Backend Status (Implemented)
@@ -213,6 +266,18 @@ http://localhost:8080/api
 - Product CRUD with owner checks
 - Product stock patch endpoint
 - Search/filter/sort for products
+- Environment-variable based configuration for DB/JWT/CORS
+- Docker deployment support
+
+## Current Frontend Status (Implemented)
+
+- Login/Register landing page at `/`
+- Protected route flow for `/products`
+- Session persistence with local storage and token expiry cleanup
+- Current user bootstrap from `GET /api/auth/me`
+- Auto logout on `401` / `403` API responses
+- Toast notifications for success and error flows
+- Shared loaders and empty states for polished UX
 
 ## Implemented API Snapshot
 

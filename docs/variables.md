@@ -23,7 +23,6 @@ DB_PASSWORD=yourpassword
 
 JWT_SECRET=change_this_to_long_random_secret
 JWT_EXPIRATION_MS=900000
-JWT_REFRESH_EXPIRATION_MS=604800000
 
 CORS_ALLOWED_ORIGINS=http://localhost:5173
 
@@ -40,6 +39,13 @@ VITE_API_BASE_URL=http://localhost:8080/api
 VITE_ENV=development
 ```
 
+## Production URLs
+
+```env
+FRONTEND_URL=https://stock-sphere-sable.vercel.app/
+BACKEND_API_URL=https://stocksphere-4xt1.onrender.com/api
+```
+
 ---
 
 # JWT Constants
@@ -47,7 +53,6 @@ VITE_ENV=development
 | Variable                  | Value     | Meaning    |
 | ------------------------- | --------- | ---------- |
 | JWT_EXPIRATION_MS         | 900000    | 15 minutes |
-| JWT_REFRESH_EXPIRATION_MS | 604800000 | 7 days     |
 
 Recommended because users hate logging in repeatedly but attackers love permanent sessions.
 

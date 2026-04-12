@@ -6,6 +6,29 @@ Goal: ship a real usable product in stages instead of constructing a glorious un
 
 ---
 
+# Current Status Snapshot (2026-04-13)
+
+## Live Deployment
+
+- Frontend: [https://stock-sphere-sable.vercel.app/](https://stock-sphere-sable.vercel.app/)
+- Backend API: [https://stocksphere-4xt1.onrender.com/api](https://stocksphere-4xt1.onrender.com/api)
+
+## Completed Recently
+
+- Auth onboarding flow now uses Login/Register (no public JWT debug entry)
+- Protected product route with session persistence and auto user bootstrap
+- Auto-logout handling on unauthorized API responses
+- Product management UX polish: toasts, loaders, empty states
+- Backend environment-variable hardening for DB/JWT/CORS
+- Backend containerization with Docker for Render deployment
+
+## Current Focus
+
+- Production smoke testing and stabilization
+- Next feature wave: stock movement logs, staff access, low-stock notifications
+
+---
+
 # Development Philosophy
 
 1. Build core utility first

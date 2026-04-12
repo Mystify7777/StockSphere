@@ -14,7 +14,7 @@ Do highest leverage work first, not whatever feels glamorous.
 
 # CURRENT PHASE
 
-Phase 0 -> Foundation Setup
+Phase 1 -> MVP Core + Deployment
 
 ---
 
@@ -31,7 +31,7 @@ Phase 0 -> Foundation Setup
 ## Backend Core
 
 - [x] Configure application.properties
-- [ ] Connect MySQL database
+- [x] Connect MySQL database
 - [x] Create global exception handler
 - [x] Setup DTO structure
 - [x] Setup response wrapper pattern
@@ -82,7 +82,7 @@ Phase 0 -> Foundation Setup
 ## Frontend Base
 
 - [x] Login page
-- [ ] Register page
+- [x] Register page
 - [x] Dashboard layout
 - [ ] Navbar + sidebar
 - [x] Route protection
@@ -201,12 +201,12 @@ Because modern apps must shimmer while failing.
 
 ## Pages
 
-- [ ] Home
-- [ ] Login
-- [ ] Register
-- [ ] Dashboard
+- [x] Home
+- [x] Login
+- [x] Register
+- [x] Dashboard
 - [ ] Shops
-- [ ] Inventory
+- [x] Inventory
 - [ ] Marketplace
 - [ ] Settings
 
@@ -232,10 +232,10 @@ Because modern apps must shimmer while failing.
 
 # DEPLOYMENT TODO
 
-- [ ] Backend deploy
-- [ ] Frontend deploy
-- [ ] Environment variables secure
-- [ ] Production DB
+- [x] Backend deploy
+- [x] Frontend deploy
+- [x] Environment variables secure
+- [x] Production DB
 - [ ] Domain setup
 
 ---
