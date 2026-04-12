@@ -146,6 +146,45 @@
   font-size: 1.25rem;
 }
 
+.server-status {
+  margin-top: 0.75rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  font-size: 0.83rem;
+}
+
+.server-status-line {
+  line-height: 1.35;
+}
+
+.server-retry {
+  margin-top: 0.45rem;
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  padding: 0.25rem 0.55rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+
+.server-slow-hint {
+  margin-top: 0.45rem;
+  font-size: 0.76rem;
+  opacity: 0.95;
+}
+
+.server-status.warming {
+  background: #fff8e6;
+  border: 1px solid #f4dba4;
+  color: #8a6100;
+}
+
+.server-status.ready {
+  background: #e9f8ef;
+  border: 1px solid #b9ebcc;
+  color: #17643a;
+}
+
 .auth-copy {
   margin: 0.6rem 0 0;
   color: #486973;

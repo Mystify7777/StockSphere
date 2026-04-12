@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Loader from './components/Loader.jsx'
@@ -7,6 +7,8 @@ import { useAuth } from './context/AuthContext.jsx'
 import { loginWithCredentials, registerAccount } from './services/productApi'
 import Products from './pages/Products'
 import './App.css'
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
 
 const ROLE_MAP = {
   OWNER: 'ROLE_OWNER',
@@ -35,10 +37,79 @@ function AuthLanding() {
   })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [serverReady, setServerReady] = useState(false)
+  const [serverChecking, setServerChecking] = useState(true)
+  const [warmingUp, setWarmingUp] = useState(false)
+  const [showSlowWakeHint, setShowSlowWakeHint] = useState(false)
   const hasPasswordMismatch =
     mode === 'register' &&
     registerForm.confirmPassword.length > 0 &&
     registerForm.password !== registerForm.confirmPassword
+
+  async function checkServerHealth(applyState = true) {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+    try {
+      const response = await fetch(`${API_BASE}/health`, {
+        method: 'GET',
+        signal: controller.signal,
+      })
+      if (applyState) {
+        setServerReady(response.ok)
+      }
+      return response.ok
+    } catch {
+      if (applyState) {
+        setServerReady(false)
+      }
+      return false
+    } finally {
+      clearTimeout(timeoutId)
+      if (applyState) {
+        setServerChecking(false)
+      }
+    }
+  }
+
+  useEffect(() => {
+    let mounted = true
+
+    async function pingHealth() {
+      try {
+        const ready = await checkServerHealth(false)
+        if (mounted) {
+          setServerReady(ready)
+          setServerChecking(false)
+        }
+      } catch {
+        if (mounted) {
+          setServerReady(false)
+          setServerChecking(false)
+        }
+      }
+    }
+
+    pingHealth()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!serverReady && (serverChecking || warmingUp)) {
+      const timeoutId = setTimeout(() => {
+        setShowSlowWakeHint(true)
+      }, 10000)
+
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }
+
+    setShowSlowWakeHint(false)
+  }, [serverReady, serverChecking, warmingUp])
 
   if (loading) {
     return (
@@ -60,6 +131,23 @@ function AuthLanding() {
       if (registerForm.password !== registerForm.confirmPassword) {
         setError('Passwords do not match.')
         return
+      }
+    }
+
+    if (!serverReady) {
+      setShowSlowWakeHint(false)
+      setWarmingUp(true)
+      toast.info('Free-tier backend waking up. First request may take 30-60 seconds.')
+
+      try {
+        const ready = await checkServerHealth()
+        if (ready) {
+          setServerReady(true)
+        }
+      } catch {
+        setServerReady(false)
+      } finally {
+        setWarmingUp(false)
       }
     }
 
@@ -107,6 +195,28 @@ function AuthLanding() {
         <div className="auth-card">
           <p className="kicker">Account Access</p>
           <h3>{mode === 'login' ? 'Sign in to continue' : 'Create your account'}</h3>
+          <div className={`server-status ${serverReady ? 'ready' : 'warming'}`}>
+            <div className="server-status-line">
+              {serverChecking ? 'Waking server...' : serverReady ? 'Server ready' : 'Backend waking up (free hosting). First request may take ~30 seconds.'}
+            </div>
+            {!serverReady ? (
+              <button
+                type="button"
+                className="server-retry"
+                onClick={() => {
+                  setShowSlowWakeHint(false)
+                  setServerChecking(true)
+                  checkServerHealth()
+                }}
+                disabled={serverChecking || warmingUp}
+              >
+                {serverChecking ? 'Checking...' : 'Retry health check'}
+              </button>
+            ) : null}
+            {showSlowWakeHint && !serverReady ? (
+              <div className="server-slow-hint">Still waking up... free hosting cold starts can take up to a minute.</div>
+            ) : null}
+          </div>
 
           <div className="auth-tabs" role="tablist" aria-label="Authentication tabs">
             <button
@@ -222,7 +332,7 @@ function AuthLanding() {
             ) : null}
 
             <div className="auth-actions">
-              <button type="submit" disabled={submitting || hasPasswordMismatch}>
+              <button type="submit" disabled={submitting || hasPasswordMismatch || warmingUp}>
                 {submitting ? <Loader text="Please wait..." /> : mode === 'login' ? 'Login' : 'Create Account'}
               </button>
             </div>

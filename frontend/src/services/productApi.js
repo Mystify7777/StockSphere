@@ -62,6 +62,14 @@ export function getShops(token) {
   return apiRequest('/shops', { token })
 }
 
+export function createShop(token, payload) {
+  return apiRequest('/shops', {
+    method: 'POST',
+    token,
+    body: payload,
+  })
+}
+
 export function getProducts(token, { shopId, search, category, lowStockOnly, sort }) {
   const params = new URLSearchParams()
   params.set('shopId', shopId)
