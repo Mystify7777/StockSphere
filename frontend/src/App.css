@@ -199,6 +199,16 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+.field-hint {
+  display: block;
+  margin-top: -0.2rem;
+  font-size: 0.8rem;
+}
+
+.field-hint.error {
+  color: #b42318;
+}
+
 .auth-actions {
   display: flex;
   justify-content: flex-end;

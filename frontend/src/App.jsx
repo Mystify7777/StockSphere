@@ -14,6 +14,12 @@ const ROLE_MAP = {
   BUYER: 'ROLE_BUYER',
 }
 
+const ROLE_LABELS = {
+  ROLE_OWNER: 'Owner',
+  ROLE_STAFF: 'Staff',
+  ROLE_BUYER: 'Buyer',
+}
+
 function AuthLanding() {
   const { isAuthenticated, loading, login } = useAuth()
   const navigate = useNavigate()
@@ -24,10 +30,15 @@ function AuthLanding() {
     name: '',
     email: '',
     password: '',
-    role: 'STAFF',
+    confirmPassword: '',
+    role: 'OWNER',
   })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const hasPasswordMismatch =
+    mode === 'register' &&
+    registerForm.confirmPassword.length > 0 &&
+    registerForm.password !== registerForm.confirmPassword
 
   if (loading) {
     return (
@@ -45,6 +56,13 @@ function AuthLanding() {
     event.preventDefault()
     setError('')
 
+    if (mode === 'register') {
+      if (registerForm.password !== registerForm.confirmPassword) {
+        setError('Passwords do not match.')
+        return
+      }
+    }
+
     setSubmitting(true)
 
     try {
@@ -60,9 +78,10 @@ function AuthLanding() {
       toast.success(mode === 'login' ? 'Logged in' : 'Account created')
       navigate(location.state?.from?.pathname || '/products', { replace: true })
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please check your inputs.')
+      const message = err?.message || 'Authentication failed. Please check your inputs.'
+      setError(message)
       if (err.status !== 401 && err.status !== 403) {
-        toast.error(err.message || 'Login failed')
+        toast.error(message)
       }
     } finally {
       setSubmitting(false)
@@ -167,6 +186,24 @@ function AuthLanding() {
 
             {mode === 'register' ? (
               <>
+                <label htmlFor="register-confirm-password">Confirm password</label>
+                <input
+                  id="register-confirm-password"
+                  type="password"
+                  autoComplete="new-password"
+                  value={registerForm.confirmPassword}
+                  onChange={(event) =>
+                    setRegisterForm((prev) => ({
+                      ...prev,
+                      confirmPassword: event.target.value,
+                    }))
+                  }
+                  minLength={8}
+                  placeholder="Re-enter your password"
+                  required
+                />
+                {hasPasswordMismatch ? <small className="field-hint error">Passwords do not match.</small> : null}
+
                 <label htmlFor="register-role">Role</label>
                 <select
                   id="register-role"
@@ -179,15 +216,14 @@ function AuthLanding() {
                   }
                 >
                   <option value="OWNER">Owner</option>
-                  <option value="STAFF">Staff</option>
                   <option value="BUYER">Buyer</option>
                 </select>
               </>
             ) : null}
 
             <div className="auth-actions">
-              <button type="submit" disabled={submitting}>
-                {submitting ? <Loader text="Please wait..." /> : 'Continue to Dashboard'}
+              <button type="submit" disabled={submitting || hasPasswordMismatch}>
+                {submitting ? <Loader text="Please wait..." /> : mode === 'login' ? 'Login' : 'Create Account'}
               </button>
             </div>
           </form>
@@ -220,7 +256,11 @@ function AppShell() {
         )}
 
         <div className="shell-actions">
-          {user ? <small className="session-note">Welcome, {user.name} · {user.role}</small> : null}
+          {user ? (
+            <small className="session-note">
+              Welcome, {user.name} · {ROLE_LABELS[user.role] || user.role?.replace('ROLE_', '')}
+            </small>
+          ) : null}
           {isAuthenticated ? (
             <button type="button" className="ghost" onClick={logout}>
               Logout
