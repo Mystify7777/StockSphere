@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Loader from './Loader'
 
 const EMPTY_FORM = {
   name: '',
@@ -83,7 +84,7 @@ function ProductModal({ isOpen, mode, product, onClose, onSubmit, saving }) {
 
           <div className="modal-actions">
             <button type="button" className="ghost" onClick={onClose}>Cancel</button>
-            <button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save Product'}</button>
+            <button type="submit" disabled={saving}>{saving ? <Loader text="Saving..." /> : 'Save Product'}</button>
           </div>
         </form>
       </div>

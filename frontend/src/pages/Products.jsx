@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
+import EmptyState from '../components/EmptyState'
+import Loader from '../components/Loader'
 import ProductModal from '../components/ProductModal'
 import ProductTable from '../components/ProductTable'
 import { useAuth } from '../context/AuthContext'
@@ -50,6 +53,9 @@ function Products() {
         }
       } catch (err) {
         setError(err.message)
+        if (err.status !== 401 && err.status !== 403) {
+          toast.error(err.message)
+        }
       }
     }
 
@@ -73,6 +79,9 @@ function Products() {
         setProducts(data)
       } catch (err) {
         setError(err.message)
+        if (err.status !== 401 && err.status !== 403) {
+          toast.error(err.message)
+        }
       } finally {
         setLoading(false)
       }
@@ -104,8 +113,12 @@ function Products() {
     try {
       await deleteProduct(token, product.id)
       await refreshAll()
+      toast.success('Product deleted')
     } catch (err) {
       setError(err.message)
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error(err.message)
+      }
     }
   }
 
@@ -113,8 +126,12 @@ function Products() {
     try {
       await patchStock(token, product.id, delta)
       await refreshAll()
+      toast.success('Stock updated')
     } catch (err) {
       setError(err.message)
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error(err.message)
+      }
     }
   }
 
@@ -133,6 +150,7 @@ function Products() {
   async function handleModalSubmit(formData) {
     if (!selectedShopId) {
       setError('Select a shop before saving products.')
+      toast.error('Select a shop before saving products.')
       return
     }
 
@@ -141,16 +159,21 @@ function Products() {
     try {
       if (modalState.mode === 'edit' && modalState.product) {
         await updateProduct(token, modalState.product.id, formData)
+        toast.success('Product updated')
       } else {
         await createProduct(token, {
           ...formData,
           shopId: selectedShopId,
         })
+        toast.success('Product added')
       }
       closeModal()
       await refreshAll()
     } catch (err) {
       setError(err.message)
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error(err.message)
+      }
     } finally {
       setSaving(false)
     }
@@ -164,7 +187,7 @@ function Products() {
   ]
 
   if (!token) {
-    return <div className="empty-state">Session expired. Sign in again to use Products.</div>
+    return <EmptyState text="Session expired. Sign in again to use Products." />
   }
 
   return (
@@ -219,7 +242,11 @@ function Products() {
       </section>
 
       {error ? <div className="error-box">{error}</div> : null}
-      {loading ? <div className="loading">Loading products...</div> : null}
+      {loading ? <Loader text="Loading products..." /> : null}
+
+      {!loading && !shops.length ? (
+        <EmptyState text="Create a shop to begin." />
+      ) : null}
 
       {!loading && selectedShopId ? (
         <ProductTable
@@ -228,6 +255,10 @@ function Products() {
           onDelete={handleDelete}
           onAdjustStock={handleAdjust}
         />
+      ) : null}
+
+      {!loading && selectedShopId && !products.length ? (
+        <EmptyState text="No products yet. Add your first product." />
       ) : null}
 
       <ProductModal

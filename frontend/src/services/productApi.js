@@ -29,7 +29,9 @@ async function apiRequest(path, { method = 'GET', token, body } = {}) {
   }
 
   if (!response.ok || !payload?.success) {
-    throw new Error(payload?.message || 'Request failed')
+    const error = new Error(payload?.message || 'Request failed')
+    error.status = response.status
+    throw error
   }
   return payload.data
 }

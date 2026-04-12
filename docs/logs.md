@@ -502,3 +502,29 @@ Write painful mistakes here so future-you stops behaving like current-you.
 
 ### Next Steps
 - Add polished loaders, toasts, and empty states in the next sprint
+
+---
+
+## [2026-04-12] Toasts + Loaders + Empty States Sprint
+
+### Completed
+- Installed React Toastify and mounted a single app-wide ToastContainer
+- Added shared loader and empty-state components
+- Showed loading feedback during session restore, login, product fetch, and modal saves
+- Added success toasts for login, product add/update/delete, and stock adjustments
+- Added error toasts for inventory and login failures
+- Replaced blank product waits with explicit empty states for no shops and no products
+- Kept 401/403 auto-logout behavior and surfaced the expired-session toast
+- Verified the frontend production build after the UI polish work
+
+### In Progress
+- None blocking
+
+### Issues
+- None blocking; the UI polish layer builds cleanly
+
+### Decisions
+- Keep toast and loader behavior centralized so future pages inherit the same feedback pattern
+
+### Next Steps
+- Move to deployment prep and environment hardening

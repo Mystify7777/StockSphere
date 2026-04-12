@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { clearToken, getToken, saveToken } from "../utils/storage";
 import { getCurrentUser, setUnauthorizedHandler } from "../services/productApi";
 
@@ -57,6 +58,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const expireSession = () => {
+    clearToken();
+    setToken(null);
+    setUser(null);
+    toast.error("Session expired. Please login again.");
+  };
+
   const fetchCurrentUser = async (nextToken = getToken()) => {
     if (!nextToken) {
       return null;
@@ -73,7 +81,7 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    setUnauthorizedHandler(logout);
+    setUnauthorizedHandler(expireSession);
 
     return () => {
       setUnauthorizedHandler(null);

@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import Loader from './components/Loader.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 import Products from './pages/Products'
@@ -7,9 +9,7 @@ import './App.css'
 
 function AuthLanding() {
   const { isAuthenticated, loading, login, token } = useAuth()
-  const apiBase = useMemo(() => {
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
-  }, [])
+  const apiBase = useMemo(() => import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api', [])
   const navigate = useNavigate()
   const location = useLocation()
   const [draftToken, setDraftToken] = useState(token || '')
@@ -21,7 +21,11 @@ function AuthLanding() {
   }, [token])
 
   if (loading) {
-    return <div className="auth-panel">Restoring session...</div>
+    return (
+      <div className="auth-panel">
+        <Loader text="Restoring session..." />
+      </div>
+    )
   }
 
   if (isAuthenticated) {
@@ -43,9 +47,13 @@ function AuthLanding() {
 
     try {
       await login(nextToken)
+      toast.success('Logged in')
       navigate(location.state?.from?.pathname || '/products', { replace: true })
-    } catch {
+    } catch (err) {
       setError('Token rejected. Session cleared.')
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error('Login failed')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -71,7 +79,9 @@ function AuthLanding() {
           />
 
           <div className="auth-actions">
-            <button type="submit" disabled={submitting}>{submitting ? 'Restoring...' : 'Continue'}</button>
+            <button type="submit" disabled={submitting}>
+              {submitting ? <Loader text="Restoring..." /> : 'Continue'}
+            </button>
           </div>
         </form>
 
@@ -85,9 +95,7 @@ function AuthLanding() {
 
 function AppShell() {
   const { isAuthenticated, loading, logout, user } = useAuth()
-  const apiBase = useMemo(() => {
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
-  }, [])
+  const apiBase = useMemo(() => import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api', [])
 
   return (
     <div className="app-shell">
@@ -106,11 +114,7 @@ function AppShell() {
           <span className={`session-pill ${isAuthenticated ? 'active' : 'inactive'}`}>
             {loading ? 'Session loading' : isAuthenticated ? 'Session active' : 'Signed out'}
           </span>
-          {user ? (
-            <small className="session-note">
-              Welcome, {user.name} · {user.role}
-            </small>
-          ) : null}
+          {user ? <small className="session-note">Welcome, {user.name} · {user.role}</small> : null}
           <small className="session-note">API Base: {apiBase}</small>
           {isAuthenticated ? (
             <button type="button" className="ghost" onClick={logout}>

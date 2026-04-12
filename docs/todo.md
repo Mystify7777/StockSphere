@@ -145,6 +145,9 @@ Phase 0 -> Foundation Setup
 
 - [ ] Dark mode
 - [ ] Better animations
+- [x] Toast notifications
+- [x] Loaders
+- [x] Empty states
 - [ ] Skeleton loaders
 
 Because modern apps must shimmer while failing.
