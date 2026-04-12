@@ -8,13 +8,24 @@ import { loginWithCredentials, registerAccount } from './services/productApi'
 import Products from './pages/Products'
 import './App.css'
 
+const ROLE_MAP = {
+  OWNER: 'ROLE_OWNER',
+  STAFF: 'ROLE_STAFF',
+  BUYER: 'ROLE_BUYER',
+}
+
 function AuthLanding() {
   const { isAuthenticated, loading, login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [mode, setMode] = useState('login')
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '' })
+  const [registerForm, setRegisterForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'STAFF',
+  })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -40,7 +51,10 @@ function AuthLanding() {
       const authPayload =
         mode === 'login'
           ? await loginWithCredentials(loginForm)
-          : await registerAccount({ ...registerForm, role: 'STAFF' })
+          : await registerAccount({
+              ...registerForm,
+              role: ROLE_MAP[registerForm.role] || ROLE_MAP.STAFF,
+            })
 
       await login(authPayload.token)
       toast.success(mode === 'login' ? 'Logged in' : 'Account created')
@@ -150,6 +164,26 @@ function AuthLanding() {
               placeholder="At least 8 characters"
               required
             />
+
+            {mode === 'register' ? (
+              <>
+                <label htmlFor="register-role">Role</label>
+                <select
+                  id="register-role"
+                  value={registerForm.role}
+                  onChange={(event) =>
+                    setRegisterForm((prev) => ({
+                      ...prev,
+                      role: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="OWNER">Owner</option>
+                  <option value="STAFF">Staff</option>
+                  <option value="BUYER">Buyer</option>
+                </select>
+              </>
+            ) : null}
 
             <div className="auth-actions">
               <button type="submit" disabled={submitting}>

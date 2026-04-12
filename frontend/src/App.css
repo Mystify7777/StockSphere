@@ -184,7 +184,8 @@
 }
 
 .auth-form textarea,
-.auth-form input {
+.auth-form input,
+.auth-form select {
   width: 100%;
   border: 1px solid #b9d1d8;
   border-radius: 12px;
