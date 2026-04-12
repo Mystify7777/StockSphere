@@ -87,6 +87,14 @@ Phase 0 -> Foundation Setup
 - [ ] Navbar + sidebar
 - [ ] Route protection
 
+## Inventory UI
+
+- [x] /products route
+- [x] Search products UI
+- [x] Category filter UI
+- [x] Low stock toggle UI
+- [x] Quick stock update buttons
+
 ---
 
 # P2 - Valuable Tasks
@@ -201,10 +209,10 @@ Because modern apps must shimmer while failing.
 
 ## Components
 
-- [ ] Product table
-- [ ] Add product modal
+- [x] Product table
+- [x] Add product modal
 - [ ] Sidebar
-- [ ] Search bar
+- [x] Search bar
 - [x] Stat cards
 
 ---

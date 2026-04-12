@@ -182,6 +182,17 @@ npm run dev
 	- Potential Revenue
 	- Estimated Profit
 
+## Product Management UI (Implemented)
+
+- Route: `/products`
+- Product table with columns for SKU, category, quantity, pricing, margin, and stock status
+- Search by product name
+- Category filter and low-stock toggle
+- Add product modal
+- Edit product modal
+- Delete product with confirmation
+- Quick stock actions: `+1`, `+5`, `-1`, `-5`
+
 ---
 
 # API Base URL

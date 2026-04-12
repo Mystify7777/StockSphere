@@ -423,3 +423,29 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Build stock movement ledger backend module
 - Add frontend login-to-dashboard token wiring
+
+---
+
+## [2026-04-12] Product Management UI Sprint
+
+### Completed
+- Added frontend route `/products`
+- Added product API service layer for shops/products/dashboard endpoints
+- Built product table with margin and stock-health status badges
+- Added search input, category filter, low-stock toggle, and sort options
+- Added add/edit product modal flow
+- Added delete confirmation and quick stock adjustment buttons (`+1`, `+5`, `-1`, `-5`)
+- Integrated stats row (total products, low stock, inventory value, expected profit)
+
+### In Progress
+- Token/session UX improvement (replace manual token paste with login screen)
+
+### Issues
+- None blocking in this sprint; production build succeeded
+
+### Decisions
+- Prioritized utility and interview-demo value over animation/theming extras
+
+### Next Steps
+- Build stock movement ledger backend module
+- Connect frontend auth flow and persist session token
