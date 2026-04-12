@@ -373,3 +373,24 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Add stock movement ledger with reason/before/after quantity
 - Add pagination for product listing endpoint
+
+---
+
+## [2026-04-12] JWT Decode Fix + Dashboard Verification
+
+### Completed
+- Fixed JWT signing key fallback for non-Base64 secrets (`DecodingException` path)
+- Verified end-to-end auth flow (`register -> token -> protected dashboard call`)
+- Verified `GET /api/dashboard/summary` returns valid response shape
+
+### In Progress
+- Seeding products to validate non-zero dashboard metrics
+
+### Issues
+- Initial dashboard test failed due JWT key decode exception before fallback handling was widened
+
+### Decisions
+- Keep fallback to raw UTF-8 secret bytes when Base64 decode fails
+
+### Next Steps
+- Implement stock movement ledger and write entries on quantity change
