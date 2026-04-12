@@ -8,9 +8,10 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/stocksphere
     username: root
-    password: root
+    password: 0990
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
     show-sql: true

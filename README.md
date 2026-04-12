@@ -146,7 +146,7 @@ CREATE DATABASE stocksphere;
 Update:
 
 ```properties
-application.properties
+application.yml
 ```
 
 4. Run backend
@@ -186,6 +186,7 @@ http://localhost:8080/api
 ## Done
 
 - Authentication with JWT
+- JWT claims include `userId` and `role`
 - Owner-scoped shop CRUD (create/list/update/delete)
 - Product CRUD with owner checks
 - Product stock patch endpoint

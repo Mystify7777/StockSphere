@@ -298,3 +298,26 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Add stock movement entity and log writes on stock changes
 - Add pagination parameters to product listing
+
+---
+
+## [2026-04-12] Auth Hardening
+
+### Completed
+- Removed duplicate properties config
+- Consolidated to application.yml
+- Added userId and role claims to JWT
+- Improved token payload for frontend auth flow
+
+### In Progress
+- Runtime auth flow verification in Postman with fresh tokens
+
+### Issues
+- Maven still unavailable in terminal, so CLI compile/run checks remain blocked here
+
+### Decisions
+- Keep JWT payload lightweight but include identity and role claims for frontend bootstrap
+
+### Next Steps
+- Verify token payload values in login/register responses
+- Start inventory movement auditing implementation
