@@ -13,6 +13,8 @@ function AuthLanding() {
   const navigate = useNavigate()
   const location = useLocation()
   const [draftToken, setDraftToken] = useState(token || '')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     setDraftToken(token || '')
@@ -26,17 +28,27 @@ function AuthLanding() {
     return <Navigate to="/products" replace />
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setError('')
 
     const nextToken = draftToken.trim()
 
     if (!nextToken) {
+      setError('Paste a valid token to continue.')
       return
     }
 
-    login(nextToken)
-    navigate(location.state?.from?.pathname || '/products', { replace: true })
+    setSubmitting(true)
+
+    try {
+      await login(nextToken)
+      navigate(location.state?.from?.pathname || '/products', { replace: true })
+    } catch {
+      setError('Token rejected. Session cleared.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -59,9 +71,11 @@ function AuthLanding() {
           />
 
           <div className="auth-actions">
-            <button type="submit">Continue</button>
+            <button type="submit" disabled={submitting}>{submitting ? 'Restoring...' : 'Continue'}</button>
           </div>
         </form>
+
+        {error ? <div className="error-box">{error}</div> : null}
 
         <small className="auth-meta">API Base: {apiBase}</small>
       </div>
@@ -70,7 +84,7 @@ function AuthLanding() {
 }
 
 function AppShell() {
-  const { isAuthenticated, loading, logout } = useAuth()
+  const { isAuthenticated, loading, logout, user } = useAuth()
   const apiBase = useMemo(() => {
     return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
   }, [])
@@ -92,6 +106,11 @@ function AppShell() {
           <span className={`session-pill ${isAuthenticated ? 'active' : 'inactive'}`}>
             {loading ? 'Session loading' : isAuthenticated ? 'Session active' : 'Signed out'}
           </span>
+          {user ? (
+            <small className="session-note">
+              Welcome, {user.name} · {user.role}
+            </small>
+          ) : null}
           <small className="session-note">API Base: {apiBase}</small>
           {isAuthenticated ? (
             <button type="button" className="ghost" onClick={logout}>

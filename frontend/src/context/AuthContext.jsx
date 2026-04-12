@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { clearToken, getToken, saveToken } from "../utils/storage";
+import { getCurrentUser, setUnauthorizedHandler } from "../services/productApi";
 
 const AuthContext = createContext(null);
 
@@ -46,21 +47,41 @@ export function AuthProvider({ children }) {
 
     return storedToken;
   });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const expiryTimerRef = useRef(null);
 
-  useEffect(() => {
-    const storedToken = getToken();
+  const logout = () => {
+    clearToken();
+    setToken(null);
+    setUser(null);
+  };
 
-    if (!storedToken || isExpired(storedToken)) {
-      clearToken();
-      setToken(null);
-      setLoading(false);
-      return;
+  const fetchCurrentUser = async (nextToken = getToken()) => {
+    if (!nextToken) {
+      return null;
     }
 
-    setToken(storedToken);
-    setLoading(false);
+    try {
+      const currentUser = await getCurrentUser(nextToken);
+      setUser(currentUser);
+      return currentUser;
+    } catch (error) {
+      logout();
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    setUnauthorizedHandler(logout);
+
+    return () => {
+      setUnauthorizedHandler(null);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchCurrentUser().finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -99,31 +120,29 @@ export function AuthProvider({ children }) {
     };
   }, [token]);
 
-  const login = (newToken) => {
+  const login = async (newToken) => {
     const nextToken = newToken.trim();
 
     if (!nextToken) {
-      clearToken();
-      setToken(null);
-      return;
+      logout();
+      return null;
     }
 
     saveToken(nextToken);
     setToken(nextToken);
-  };
-
-  const logout = () => {
-    clearToken();
-    setToken(null);
+    return fetchCurrentUser(nextToken);
   };
 
   return (
     <AuthContext.Provider
       value={{
         token,
+        user,
+        setUser,
         isAuthenticated: !!token,
         loading,
         login,
+        fetchCurrentUser,
         logout,
       }}
     >

@@ -1,5 +1,11 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
 
+let unauthorizedHandler = null
+
+export function setUnauthorizedHandler(handler) {
+  unauthorizedHandler = handler
+}
+
 async function apiRequest(path, { method = 'GET', token, body } = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
     method,
@@ -10,11 +16,26 @@ async function apiRequest(path, { method = 'GET', token, body } = {}) {
     ...(body ? { body: JSON.stringify(body) } : {}),
   })
 
-  const payload = await response.json()
-  if (!response.ok || !payload.success) {
-    throw new Error(payload.message || 'Request failed')
+  let payload = null
+
+  try {
+    payload = await response.json()
+  } catch {
+    payload = null
+  }
+
+  if ((response.status === 401 || response.status === 403) && unauthorizedHandler) {
+    unauthorizedHandler()
+  }
+
+  if (!response.ok || !payload?.success) {
+    throw new Error(payload?.message || 'Request failed')
   }
   return payload.data
+}
+
+export function getCurrentUser(token) {
+  return apiRequest('/auth/me', { token })
 }
 
 export function getDashboardSummary(token) {

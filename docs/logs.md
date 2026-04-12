@@ -477,3 +477,28 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Add automatic logout on 401 responses
 - Replace token paste flow with backend login UI when the sprint moves to UX polish
+
+---
+
+## [2026-04-12] User Bootstrap + 401 Auto Logout Sprint
+
+### Completed
+- Added current-user bootstrap from `GET /api/auth/me`
+- Added user state to shared auth context
+- Exposed `fetchCurrentUser` from auth context for session restore and login verification
+- Wired the shell header to display the authenticated user name and role
+- Added shared unauthorized handling in the frontend API client
+- Auto-cleared sessions on `401` and `403` responses from API calls
+- Verified the frontend production build after the auth trust-layer changes
+
+### In Progress
+- None blocking
+
+### Issues
+- None blocking; backend auth response shape was wrapped as expected
+
+### Decisions
+- Keep current-user bootstrap in the auth context so the whole app stays in sync after refresh and login
+
+### Next Steps
+- Add polished loaders, toasts, and empty states in the next sprint
