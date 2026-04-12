@@ -394,3 +394,32 @@ Write painful mistakes here so future-you stops behaving like current-you.
 
 ### Next Steps
 - Implement stock movement ledger and write entries on quantity change
+
+---
+
+## [2026-04-12] Seeded Summary Verification + Frontend Dashboard Cards
+
+### Completed
+- Seeded test owner, shop, and 5 products via real APIs
+- Verified `GET /api/dashboard/summary` with non-zero realistic metrics:
+  - totalProducts: 5
+  - lowStockCount: 3
+  - inventoryValue: 39336.00
+  - potentialRevenue: 46845.00
+  - estimatedProfit: 7509.00
+- Scaffolded React + Vite frontend app
+- Replaced starter UI with dashboard summary page and metric cards
+- Added token-based summary fetch flow in frontend
+
+### In Progress
+- Hardening frontend auth/session flow (replace manual token paste)
+
+### Issues
+- Initial summary test was blocked by JWT Base64 decode handling; fixed in previous commit
+
+### Decisions
+- Prioritized demo-ready dashboard cards after validating backend metrics math
+
+### Next Steps
+- Build stock movement ledger backend module
+- Add frontend login-to-dashboard token wiring

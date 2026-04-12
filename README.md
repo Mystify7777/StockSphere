@@ -171,6 +171,17 @@ npm install
 npm run dev
 ```
 
+## Dashboard Summary UI (Implemented)
+
+- Frontend includes a dashboard cards page that calls `GET /api/dashboard/summary`
+- Paste a Bearer token in the UI and fetch metrics live
+- Metrics shown:
+	- Total Products
+	- Low Stock Count
+	- Inventory Value
+	- Potential Revenue
+	- Estimated Profit
+
 ---
 
 # API Base URL

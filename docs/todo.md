@@ -24,7 +24,7 @@ Phase 0 -> Foundation Setup
 
 - [x] Create GitHub repository
 - [x] Setup backend Spring Boot project
-- [ ] Setup frontend React + Vite project
+- [x] Setup frontend React + Vite project
 - [x] Create docs folder
 - [ ] Create branch strategy
 
@@ -83,7 +83,7 @@ Phase 0 -> Foundation Setup
 
 - [ ] Login page
 - [ ] Register page
-- [ ] Dashboard layout
+- [x] Dashboard layout
 - [ ] Navbar + sidebar
 - [ ] Route protection
 
@@ -205,7 +205,7 @@ Because modern apps must shimmer while failing.
 - [ ] Add product modal
 - [ ] Sidebar
 - [ ] Search bar
-- [ ] Stat cards
+- [x] Stat cards
 
 ---
 
