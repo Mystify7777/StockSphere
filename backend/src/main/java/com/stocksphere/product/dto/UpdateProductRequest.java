@@ -21,9 +21,17 @@ public record UpdateProductRequest(
         @Min(value = 0, message = "Quantity cannot be negative")
         Integer qty,
 
-        @NotNull(message = "Price is required")
-        @DecimalMin(value = "0.0", inclusive = true, message = "Price cannot be negative")
-        BigDecimal price,
+        @NotNull(message = "Cost price is required")
+        @DecimalMin(value = "0.0", inclusive = true, message = "Cost price cannot be negative")
+        BigDecimal costPrice,
+
+        @NotNull(message = "Selling price is required")
+        @DecimalMin(value = "0.0", inclusive = true, message = "Selling price cannot be negative")
+        BigDecimal sellingPrice,
+
+        @NotBlank(message = "Category is required")
+        @Size(max = 100, message = "Category can be at most 100 characters")
+        String category,
 
         @Min(value = 1, message = "Low stock limit must be at least 1")
         Integer lowStockLimit

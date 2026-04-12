@@ -36,7 +36,13 @@ public class Product {
     private Integer qty;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
+    private BigDecimal costPrice;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal sellingPrice;
+
+    @Column(nullable = false, length = 100)
+    private String category;
 
     @Column(nullable = false)
     private Integer lowStockLimit;

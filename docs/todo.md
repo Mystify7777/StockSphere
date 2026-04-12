@@ -149,7 +149,7 @@ Because modern apps must shimmer while failing.
 - [x] Role
 - [x] Shop
 - [x] Product
-- [ ] Category
+- [x] Category
 - [ ] Inquiry
 - [ ] Notification
 - [ ] StockMovement
@@ -177,6 +177,12 @@ Because modern apps must shimmer while failing.
 - [x] POST /api/products
 - [x] PUT /api/products/{id}
 - [x] DELETE /api/products/{id}
+
+## Product Data Model
+
+- [x] category field
+- [x] costPrice field
+- [x] sellingPrice field
 
 ---
 

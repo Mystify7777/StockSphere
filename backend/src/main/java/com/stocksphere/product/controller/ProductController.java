@@ -32,10 +32,11 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAll(@RequestParam UUID shopId,
                                                                      @RequestParam(required = false) String search,
+                                                                     @RequestParam(required = false) String category,
                                                                      @RequestParam(defaultValue = "false") boolean lowStockOnly,
                                                                      @RequestParam(required = false) String sort,
                                                                      Authentication authentication) {
-        List<ProductResponse> products = productService.getProducts(authentication.getName(), shopId, search, lowStockOnly, sort);
+        List<ProductResponse> products = productService.getProducts(authentication.getName(), shopId, search, category, lowStockOnly, sort);
         return ResponseEntity.ok(ApiResponse.success("Products fetched successfully", products));
     }
 

@@ -321,3 +321,28 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Verify token payload values in login/register responses
 - Start inventory movement auditing implementation
+
+---
+
+## [2026-04-12] Product Model Upgrade
+
+### Completed
+- Added category field
+- Split price into costPrice and sellingPrice
+- Prepared inventory for profit analytics
+- Updated product create/update DTOs and response payload
+- Added product category filter support
+- Added `sort=profit` support based on per-unit margin
+
+### In Progress
+- Runtime verification with local database schema update (`ddl-auto=update`)
+
+### Issues
+- CLI startup verification remains blocked here until Maven is installed in terminal
+
+### Decisions
+- Introduced split pricing now to avoid frontend coupling with ambiguous single-price model
+
+### Next Steps
+- Add stock movement entity and audit writes for stock mutations
+- Add paginated product listing response

@@ -12,6 +12,7 @@ import com.stocksphere.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,9 @@ public class ProductService {
         product.setName(request.name().trim());
         product.setSku(request.sku().trim());
         product.setQty(request.qty());
-        product.setPrice(request.price());
+        product.setCostPrice(request.costPrice());
+        product.setSellingPrice(request.sellingPrice());
+        product.setCategory(request.category().trim());
         product.setLowStockLimit(request.lowStockLimit() == null ? DEFAULT_LOW_STOCK_LIMIT : request.lowStockLimit());
         product.setStatus(resolveStatus(product.getQty()));
 
@@ -45,6 +48,7 @@ public class ProductService {
     public List<ProductResponse> getProducts(String ownerEmail,
                                              UUID shopId,
                                              String search,
+                                             String category,
                                              boolean lowStockOnly,
                                              String sort) {
         List<Product> products;
@@ -60,11 +64,19 @@ public class ProductService {
                     .toList();
         }
 
+        if (category != null && !category.isBlank()) {
+            String categoryNormalized = category.trim().toLowerCase();
+            products = products.stream()
+                    .filter(p -> p.getCategory() != null && p.getCategory().toLowerCase().equals(categoryNormalized))
+                    .toList();
+        }
+
         Comparator<Product> comparator = switch (sort == null ? "" : sort) {
             case "qtyAsc" -> Comparator.comparing(Product::getQty);
             case "qtyDesc" -> Comparator.comparing(Product::getQty).reversed();
             case "nameDesc" -> Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER).reversed();
             case "nameAsc" -> Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER);
+            case "profit" -> Comparator.comparing(this::profitPerUnit, Comparator.reverseOrder());
             default -> Comparator.comparing(Product::getCreatedAt).reversed();
         };
 
@@ -81,7 +93,9 @@ public class ProductService {
         product.setName(request.name().trim());
         product.setSku(request.sku().trim());
         product.setQty(request.qty());
-        product.setPrice(request.price());
+        product.setCostPrice(request.costPrice());
+        product.setSellingPrice(request.sellingPrice());
+        product.setCategory(request.category().trim());
         product.setLowStockLimit(request.lowStockLimit() == null ? product.getLowStockLimit() : request.lowStockLimit());
         product.setStatus(resolveStatus(product.getQty()));
 
@@ -122,11 +136,17 @@ public class ProductService {
                 product.getName(),
                 product.getSku(),
                 product.getQty(),
-                product.getPrice(),
+                product.getCostPrice(),
+                product.getSellingPrice(),
+                product.getCategory(),
                 product.getLowStockLimit(),
                 product.getStatus(),
                 product.getCreatedAt(),
                 product.getUpdatedAt()
         );
+    }
+
+    private BigDecimal profitPerUnit(Product product) {
+        return product.getSellingPrice().subtract(product.getCostPrice());
     }
 }

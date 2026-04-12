@@ -214,10 +214,16 @@ http://localhost:8080/api
 ### Products
 
 - `POST /api/products`
-- `GET /api/products?shopId=...&search=...&lowStockOnly=...&sort=...`
+- `GET /api/products?shopId=...&search=...&category=...&lowStockOnly=...&sort=...`
 - `PUT /api/products/{id}`
 - `DELETE /api/products/{id}`
 - `PATCH /api/products/{id}/stock`
+
+## Product Model
+
+- `costPrice` and `sellingPrice` tracked separately
+- `category` field added for filtering and analytics readiness
+- `sort=profit` supported using per-unit margin
 
 ---
 
