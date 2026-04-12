@@ -449,3 +449,31 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Build stock movement ledger backend module
 - Connect frontend auth flow and persist session token
+
+---
+
+## [2026-04-12] Frontend Auth Persistence Sprint
+
+### Completed
+- Added persistent token storage helper using `localStorage`
+- Added JWT-aware auth context with `login`, `logout`, `isAuthenticated`, and `loading`
+- Added token expiry cleanup so expired sessions clear automatically
+- Added protected route guard for `/products`
+- Wrapped the React app in the auth provider at bootstrap
+- Replaced the manual bearer-token shell with a session restore landing screen
+- Switched product page data access to the shared auth context
+- Verified frontend production build after the auth wiring
+
+### In Progress
+- 401 auto-logout handling from API responses
+- Polished login-to-dashboard flow using real backend login form
+
+### Issues
+- None blocking; the auth layer compiles and the production build passes
+
+### Decisions
+- Keep auth persistence in a small shared context instead of pushing token state into individual pages
+
+### Next Steps
+- Add automatic logout on 401 responses
+- Replace token paste flow with backend login UI when the sprint moves to UX polish

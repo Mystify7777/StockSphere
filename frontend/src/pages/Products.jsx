@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import ProductModal from '../components/ProductModal'
 import ProductTable from '../components/ProductTable'
+import { useAuth } from '../context/AuthContext'
 import {
   createProduct,
   deleteProduct,
@@ -11,7 +12,8 @@ import {
   updateProduct,
 } from '../services/productApi'
 
-function Products({ token }) {
+function Products() {
+  const { token } = useAuth()
   const [shops, setShops] = useState([])
   const [selectedShopId, setSelectedShopId] = useState('')
   const [products, setProducts] = useState([])
@@ -162,7 +164,7 @@ function Products({ token }) {
   ]
 
   if (!token) {
-    return <div className="empty-state">Add a Bearer token in the top bar to use Products.</div>
+    return <div className="empty-state">Session expired. Sign in again to use Products.</div>
   }
 
   return (

@@ -81,11 +81,11 @@ Phase 0 -> Foundation Setup
 
 ## Frontend Base
 
-- [ ] Login page
+- [x] Login page
 - [ ] Register page
 - [x] Dashboard layout
 - [ ] Navbar + sidebar
-- [ ] Route protection
+- [x] Route protection
 
 ## Inventory UI
 
