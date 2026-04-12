@@ -5,6 +5,10 @@ spring:
   application:
     name: stocksphere-backend
 
+  devtools:
+    restart:
+      enabled: true
+
   datasource:
     url: jdbc:mysql://localhost:3306/stocksphere
     username: root
