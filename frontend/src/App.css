@@ -92,10 +92,41 @@
   min-height: calc(100vh - 150px);
   display: grid;
   place-items: center;
+  padding: 0.5rem 0;
+}
+
+.auth-layout {
+  width: min(960px, 100%);
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.auth-hero {
+  background: radial-gradient(circle at top left, #e2f8ff, #d8eff5 45%, #cbe7ef 100%);
+  border: 1px solid #bfe0e9;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(7, 52, 61, 0.1);
+  padding: 1.25rem;
+}
+
+.auth-hero h2 {
+  margin: 0.35rem 0 0;
+  color: #113840;
+  font-size: clamp(1.3rem, 2vw, 2rem);
+}
+
+.auth-benefits {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  color: #234a54;
+  display: grid;
+  gap: 0.45rem;
 }
 
 .auth-card {
-  width: min(640px, 100%);
+  width: 100%;
   background: linear-gradient(180deg, #ffffff, #f5fbfc);
   border: 1px solid #d7e9ee;
   border-radius: 18px;
@@ -109,9 +140,35 @@
   font-size: clamp(1.4rem, 2vw, 2rem);
 }
 
+.auth-card h3 {
+  margin: 0.35rem 0 0;
+  color: #123940;
+  font-size: 1.25rem;
+}
+
 .auth-copy {
   margin: 0.6rem 0 0;
   color: #486973;
+}
+
+.auth-tabs {
+  margin-top: 1rem;
+  display: inline-flex;
+  border: 1px solid #c7dce3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.auth-tab {
+  background: #edf5f7;
+  color: #1f4b56;
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+}
+
+.auth-tab.active {
+  background: #0f766e;
+  color: #ffffff;
 }
 
 .auth-form {
@@ -126,14 +183,18 @@
   color: #244854;
 }
 
-.auth-form textarea {
+.auth-form textarea,
+.auth-form input {
   width: 100%;
-  resize: vertical;
-  min-height: 110px;
   border: 1px solid #b9d1d8;
   border-radius: 12px;
   padding: 0.75rem;
   font-size: 0.92rem;
+}
+
+.auth-form textarea {
+  resize: vertical;
+  min-height: 110px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -386,6 +447,10 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
   .controls-row {
     grid-template-columns: 1fr 1fr;
   }
@@ -404,7 +469,16 @@ button:disabled {
 
   .auth-panel {
     min-height: auto;
-    padding: 0.5rem 0;
+    padding: 0;
+  }
+
+  .auth-layout {
+    gap: 0.7rem;
+  }
+
+  .auth-hero,
+  .auth-card {
+    padding: 1rem;
   }
 
   .modal-actions {
