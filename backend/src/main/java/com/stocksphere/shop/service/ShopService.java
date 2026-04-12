@@ -2,6 +2,7 @@ package com.stocksphere.shop.service;
 
 import com.stocksphere.shop.dto.CreateShopRequest;
 import com.stocksphere.shop.dto.ShopResponse;
+import com.stocksphere.shop.dto.UpdateShopRequest;
 import com.stocksphere.shop.entity.Shop;
 import com.stocksphere.shop.repository.ShopRepository;
 import com.stocksphere.user.entity.User;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,25 @@ public class ShopService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    public ShopResponse updateShop(String ownerEmail, UUID shopId, UpdateShopRequest request) {
+        Shop shop = shopRepository.findByIdAndOwnerEmail(shopId, ownerEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Shop not found or access denied"));
+
+        shop.setName(request.name().trim());
+        if (request.publicStatus() != null) {
+            shop.setPublicStatus(request.publicStatus());
+        }
+
+        Shop updated = shopRepository.save(shop);
+        return toResponse(updated);
+    }
+
+    public void deleteShop(String ownerEmail, UUID shopId) {
+        Shop shop = shopRepository.findByIdAndOwnerEmail(shopId, ownerEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Shop not found or access denied"));
+        shopRepository.delete(shop);
     }
 
     private ShopResponse toResponse(Shop shop) {

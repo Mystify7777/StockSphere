@@ -186,7 +186,7 @@ http://localhost:8080/api
 ## Done
 
 - Authentication with JWT
-- Owner-scoped shop create/list
+- Owner-scoped shop CRUD (create/list/update/delete)
 - Product CRUD with owner checks
 - Product stock patch endpoint
 - Search/filter/sort for products
@@ -207,6 +207,8 @@ http://localhost:8080/api
 
 - `POST /api/shops`
 - `GET /api/shops`
+- `PUT /api/shops/{id}`
+- `DELETE /api/shops/{id}`
 
 ### Products
 

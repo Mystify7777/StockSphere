@@ -65,9 +65,9 @@ Phase 0 -> Foundation Setup
 ## Shop Module
 
 - [x] Create shop
-- [ ] Update shop
-- [ ] Delete shop
-- [ ] Public/private toggle
+- [x] Update shop
+- [x] Delete shop
+- [x] Public/private toggle
 - [x] Multi-shop support
 
 ## Inventory Module
@@ -168,7 +168,8 @@ Because modern apps must shimmer while failing.
 
 - [x] GET /api/shops
 - [x] POST /api/shops
-- [ ] PUT /api/shops/{id}
+- [x] PUT /api/shops/{id}
+- [x] DELETE /api/shops/{id}
 
 ## Products
 

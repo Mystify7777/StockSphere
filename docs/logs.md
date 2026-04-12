@@ -274,3 +274,27 @@ Write painful mistakes here so future-you stops behaving like current-you.
 - Implement shop update/delete APIs with strict ownership
 - Add stock movement table and audit entries for stock changes
 - Add pagination defaults for product listing endpoint
+
+---
+
+## [2026-04-12] Shop CRUD Ownership Hardening
+
+### Completed
+- Added `PUT /api/shops/{id}` for owner-scoped shop updates
+- Added `DELETE /api/shops/{id}` for owner-scoped shop deletion
+- Added `UpdateShopRequest` DTO for validated updates
+- Kept public/private toggle in update flow (`publicStatus`)
+- Preserved owner authorization checks through `findByIdAndOwnerEmail`
+
+### In Progress
+- Product listing pagination and stock movement auditing
+
+### Issues
+- CLI Maven validation still blocked until Maven is available in terminal
+
+### Decisions
+- Keep shop visibility toggle inside shop update endpoint for now
+
+### Next Steps
+- Add stock movement entity and log writes on stock changes
+- Add pagination parameters to product listing
