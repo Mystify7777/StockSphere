@@ -22,34 +22,34 @@ Phase 0 -> Foundation Setup
 
 ## Project Setup
 
-- [ ] Create GitHub repository
-- [ ] Setup backend Spring Boot project
+- [x] Create GitHub repository
+- [x] Setup backend Spring Boot project
 - [ ] Setup frontend React + Vite project
-- [ ] Create docs folder
+- [x] Create docs folder
 - [ ] Create branch strategy
 
 ## Backend Core
 
-- [ ] Configure application.properties
+- [x] Configure application.properties
 - [ ] Connect MySQL database
-- [ ] Create global exception handler
-- [ ] Setup DTO structure
-- [ ] Setup response wrapper pattern
+- [x] Create global exception handler
+- [x] Setup DTO structure
+- [x] Setup response wrapper pattern
 
 ## Security
 
-- [ ] Add Spring Security
-- [ ] Implement JWT auth
-- [ ] Password hashing
-- [ ] Protected route middleware/filter
-- [ ] Role system setup
+- [x] Add Spring Security
+- [x] Implement JWT auth
+- [x] Password hashing
+- [x] Protected route middleware/filter
+- [x] Role system setup
 
 ## Database Base Tables
 
-- [ ] users
-- [ ] roles
-- [ ] shops
-- [ ] products
+- [x] users
+- [x] roles
+- [x] shops
+- [x] products
 
 ---
 
@@ -57,27 +57,27 @@ Phase 0 -> Foundation Setup
 
 ## Auth Module
 
-- [ ] Register API
-- [ ] Login API
+- [x] Register API
+- [x] Login API
 - [ ] Refresh token flow
 - [ ] Logout API
 
 ## Shop Module
 
-- [ ] Create shop
+- [x] Create shop
 - [ ] Update shop
 - [ ] Delete shop
 - [ ] Public/private toggle
-- [ ] Multi-shop support
+- [x] Multi-shop support
 
 ## Inventory Module
 
-- [ ] Add product
-- [ ] Edit product
-- [ ] Delete product
-- [ ] Search products
-- [ ] Filter low stock
-- [ ] Sort inventory
+- [x] Add product
+- [x] Edit product
+- [x] Delete product
+- [x] Search products
+- [x] Filter low stock
+- [x] Sort inventory
 
 ## Frontend Base
 
@@ -145,10 +145,10 @@ Because modern apps must shimmer while failing.
 
 # BACKEND ENTITY TODO
 
-- [ ] User
-- [ ] Role
-- [ ] Shop
-- [ ] Product
+- [x] User
+- [x] Role
+- [x] Shop
+- [x] Product
 - [ ] Category
 - [ ] Inquiry
 - [ ] Notification
@@ -160,22 +160,22 @@ Because modern apps must shimmer while failing.
 
 ## Auth
 
-- [ ] POST /api/auth/register
-- [ ] POST /api/auth/login
+- [x] POST /api/auth/register
+- [x] POST /api/auth/login
 - [ ] POST /api/auth/refresh
 
 ## Shops
 
-- [ ] GET /api/shops
-- [ ] POST /api/shops
+- [x] GET /api/shops
+- [x] POST /api/shops
 - [ ] PUT /api/shops/{id}
 
 ## Products
 
-- [ ] GET /api/products
-- [ ] POST /api/products
-- [ ] PUT /api/products/{id}
-- [ ] DELETE /api/products/{id}
+- [x] GET /api/products
+- [x] POST /api/products
+- [x] PUT /api/products/{id}
+- [x] DELETE /api/products/{id}
 
 ---
 
@@ -224,12 +224,12 @@ Because modern apps must shimmer while failing.
 
 # WEEK 1 FOCUS ONLY
 
-- [ ] Spring Boot init
+- [x] Spring Boot init
 - [ ] DB connect
-- [ ] JWT auth
-- [ ] User entity
-- [ ] Shop entity
-- [ ] Product entity
+- [x] JWT auth
+- [x] User entity
+- [x] Shop entity
+- [x] Product entity
 
 Ignore everything else until done. Shiny distractions are undefeated.
 

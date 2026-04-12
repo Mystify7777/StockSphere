@@ -243,3 +243,34 @@ Write painful mistakes here so future-you stops behaving like current-you.
 - Install Maven and run compile + boot test
 - Add product entity and product CRUD for inventory module
 - Add ownership checks for update/delete shop endpoints
+
+---
+
+## [2026-04-12] Inventory Module API (Phase Progress)
+
+### Completed
+- Added `Product` domain with UUID id and shop relationship
+- Added `ProductStatus` enum and low-stock-aware status updates
+- Implemented product APIs:
+  - `POST /api/products`
+  - `GET /api/products?shopId=...&search=...&lowStockOnly=...&sort=...`
+  - `PUT /api/products/{id}`
+  - `DELETE /api/products/{id}`
+  - `PATCH /api/products/{id}/stock`
+- Enforced owner access checks for product operations via owner-scoped repository methods
+- Added owner-scoped shop lookup helper (`findByIdAndOwnerEmail`) for secure product creation
+
+### In Progress
+- Runtime verification with local MySQL and Maven
+
+### Issues
+- Terminal still lacks Maven (`mvn` unavailable), so CLI compile/run is pending
+
+### Decisions
+- Keep search/filter/sort in service layer for current phase speed
+- Use delta-based stock patch endpoint for frequent stock operations
+
+### Next Steps
+- Implement shop update/delete APIs with strict ownership
+- Add stock movement table and audit entries for stock changes
+- Add pagination defaults for product listing endpoint

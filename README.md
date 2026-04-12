@@ -181,6 +181,43 @@ http://localhost:8080/api
 
 ---
 
+# Current Backend Status (Implemented)
+
+## Done
+
+- Authentication with JWT
+- Owner-scoped shop create/list
+- Product CRUD with owner checks
+- Product stock patch endpoint
+- Search/filter/sort for products
+
+## Implemented API Snapshot
+
+### Health
+
+- `GET /api/health`
+
+### Auth
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+
+### Shops
+
+- `POST /api/shops`
+- `GET /api/shops`
+
+### Products
+
+- `POST /api/products`
+- `GET /api/products?shopId=...&search=...&lowStockOnly=...&sort=...`
+- `PUT /api/products/{id}`
+- `DELETE /api/products/{id}`
+- `PATCH /api/products/{id}/stock`
+
+---
+
 # Initial Modules to Build
 
 ## Phase 1
