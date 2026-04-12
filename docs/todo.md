@@ -129,7 +129,7 @@ Phase 0 -> Foundation Setup
 
 ## Analytics
 
-- [ ] Dashboard metrics
+- [x] Dashboard metrics
 - [ ] Top selling products
 - [ ] Dead stock report
 

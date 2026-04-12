@@ -219,11 +219,23 @@ http://localhost:8080/api
 - `DELETE /api/products/{id}`
 - `PATCH /api/products/{id}/stock`
 
+### Dashboard
+
+- `GET /api/dashboard/summary`
+
 ## Product Model
 
 - `costPrice` and `sellingPrice` tracked separately
 - `category` field added for filtering and analytics readiness
 - `sort=profit` supported using per-unit margin
+
+## Dashboard Summary Metrics
+
+- `totalProducts`
+- `lowStockCount`
+- `inventoryValue`
+- `potentialRevenue`
+- `estimatedProfit`
 
 ---
 

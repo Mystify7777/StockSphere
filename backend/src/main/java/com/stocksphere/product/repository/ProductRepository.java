@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+    List<Product> findByShopOwnerEmail(String ownerEmail);
+
     List<Product> findByShopIdAndShopOwnerEmail(UUID shopId, String ownerEmail);
 
     List<Product> findByShopIdAndShopOwnerEmailAndNameContainingIgnoreCase(UUID shopId, String ownerEmail, String name);

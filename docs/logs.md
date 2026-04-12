@@ -346,3 +346,30 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Add stock movement entity and audit writes for stock mutations
 - Add paginated product listing response
+
+---
+
+## [2026-04-12] Dashboard Summary + Schema Cleanup
+
+### Completed
+- Added `GET /api/dashboard/summary`
+- Added owner-scoped dashboard aggregation metrics:
+  - totalProducts
+  - lowStockCount
+  - inventoryValue
+  - potentialRevenue
+  - estimatedProfit
+- Added automatic legacy schema cleanup runner to drop `products.price` if it still exists
+
+### In Progress
+- Verifying dashboard response in Postman with real inventory data
+
+### Issues
+- mysql CLI not available in this terminal, so direct `DESCRIBE products` verification requires MySQL Workbench or local SQL client
+
+### Decisions
+- Keep dashboard summary aggregated across all shops owned by authenticated user
+
+### Next Steps
+- Add stock movement ledger with reason/before/after quantity
+- Add pagination for product listing endpoint
