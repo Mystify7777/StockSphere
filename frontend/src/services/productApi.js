@@ -70,6 +70,21 @@ export function createShop(token, payload) {
   })
 }
 
+export function updateShop(token, shopId, payload) {
+  return apiRequest(`/shops/${shopId}`, {
+    method: 'PUT',
+    token,
+    body: payload,
+  })
+}
+
+export function deleteShop(token, shopId) {
+  return apiRequest(`/shops/${shopId}`, {
+    method: 'DELETE',
+    token,
+  })
+}
+
 export function getProducts(token, { shopId, search, category, lowStockOnly, sort }) {
   const params = new URLSearchParams()
   params.set('shopId', shopId)
@@ -110,4 +125,11 @@ export function patchStock(token, productId, delta) {
     token,
     body: { delta },
   })
+}
+
+export function getStockMovements(token, shopId) {
+  const params = new URLSearchParams()
+  params.set('shopId', shopId)
+
+  return apiRequest(`/stock-movements?${params.toString()}`, { token })
 }

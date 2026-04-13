@@ -9,6 +9,7 @@ import com.stocksphere.product.entity.ProductStatus;
 import com.stocksphere.product.repository.ProductRepository;
 import com.stocksphere.shop.entity.Shop;
 import com.stocksphere.shop.repository.ShopRepository;
+import com.stocksphere.stockmovement.service.StockMovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
+    private final StockMovementService stockMovementService;
 
     public ProductResponse createProduct(String ownerEmail, CreateProductRequest request) {
         Shop shop = shopRepository.findByIdAndOwnerEmail(request.shopId(), ownerEmail)
@@ -42,6 +44,17 @@ public class ProductService {
         product.setStatus(resolveStatus(product.getQty()));
 
         Product saved = productRepository.save(product);
+        stockMovementService.recordMovement(
+            shop.getId(),
+            saved.getId(),
+            saved.getName(),
+            saved.getSku(),
+            ownerEmail,
+            "PRODUCT_CREATED",
+            0,
+            saved.getQty(),
+            "Product created"
+        );
         return toResponse(saved);
     }
 
@@ -90,6 +103,8 @@ public class ProductService {
         Product product = productRepository.findByIdAndShopOwnerEmail(productId, ownerEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found or access denied"));
 
+        int beforeQty = product.getQty();
+
         product.setName(request.name().trim());
         product.setSku(request.sku().trim());
         product.setQty(request.qty());
@@ -100,12 +115,36 @@ public class ProductService {
         product.setStatus(resolveStatus(product.getQty()));
 
         Product updated = productRepository.save(product);
+        if (beforeQty != updated.getQty()) {
+            stockMovementService.recordMovement(
+                updated.getShop().getId(),
+                updated.getId(),
+                updated.getName(),
+                updated.getSku(),
+                ownerEmail,
+                "PRODUCT_UPDATED",
+                beforeQty,
+                updated.getQty(),
+                "Product quantity updated"
+            );
+        }
         return toResponse(updated);
     }
 
     public void deleteProduct(String ownerEmail, UUID productId) {
         Product product = productRepository.findByIdAndShopOwnerEmail(productId, ownerEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found or access denied"));
+        stockMovementService.recordMovement(
+            product.getShop().getId(),
+            product.getId(),
+            product.getName(),
+            product.getSku(),
+            ownerEmail,
+            "PRODUCT_DELETED",
+            product.getQty(),
+            0,
+            "Product deleted"
+        );
         productRepository.delete(product);
     }
 
@@ -113,6 +152,7 @@ public class ProductService {
         Product product = productRepository.findByIdAndShopOwnerEmail(productId, ownerEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found or access denied"));
 
+        int beforeQty = product.getQty();
         int newQty = product.getQty() + request.delta();
         if (newQty < 0) {
             throw new IllegalArgumentException("Stock cannot go below zero");
@@ -122,6 +162,17 @@ public class ProductService {
         product.setStatus(resolveStatus(newQty));
 
         Product updated = productRepository.save(product);
+        stockMovementService.recordMovement(
+            updated.getShop().getId(),
+            updated.getId(),
+            updated.getName(),
+            updated.getSku(),
+            ownerEmail,
+            "STOCK_ADJUSTED",
+            beforeQty,
+            updated.getQty(),
+            "Stock adjusted"
+        );
         return toResponse(updated);
     }
 

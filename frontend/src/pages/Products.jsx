@@ -6,13 +6,16 @@ import ProductModal from '../components/ProductModal'
 import ProductTable from '../components/ProductTable'
 import { useAuth } from '../context/AuthContext'
 import {
+  deleteShop,
   createShop,
   createProduct,
   deleteProduct,
   getDashboardSummary,
   getProducts,
+  getStockMovements,
   getShops,
   patchStock,
+  updateShop,
   updateProduct,
 } from '../services/productApi'
 
@@ -35,6 +38,8 @@ function Products() {
   const [shopModalOpen, setShopModalOpen] = useState(false)
   const [creatingShop, setCreatingShop] = useState(false)
   const [shopForm, setShopForm] = useState({ name: '', publicStatus: false })
+  const [shopMode, setShopMode] = useState('create')
+  const [shopMovements, setShopMovements] = useState([])
 
   const categories = useMemo(() => {
     return Array.from(new Set(products.map((item) => item.category))).sort()
@@ -65,6 +70,26 @@ function Products() {
 
     loadShopsAndSummary()
   }, [token])
+
+  useEffect(() => {
+    if (!token || !selectedShopId) {
+      setShopMovements([])
+      return
+    }
+
+    async function loadMovements() {
+      try {
+        const movementData = await getStockMovements(token, selectedShopId)
+        setShopMovements(movementData)
+      } catch (err) {
+        if (err.status !== 401 && err.status !== 403) {
+          toast.error(err.message)
+        }
+      }
+    }
+
+    loadMovements()
+  }, [token, selectedShopId])
 
   useEffect(() => {
     if (!token || !selectedShopId) return
@@ -112,9 +137,33 @@ function Products() {
       sort,
     })
     setProducts(productData)
+
+    const movementData = await getStockMovements(token, selectedShopId)
+    setShopMovements(movementData)
   }
 
-  async function handleCreateShop(event) {
+  function openCreateShopModal() {
+    setShopMode('create')
+    setShopForm({ name: '', publicStatus: false })
+    setShopModalOpen(true)
+  }
+
+  function openEditShopModal() {
+    const currentShop = shops.find((shop) => shop.id === selectedShopId)
+    if (!currentShop) {
+      toast.error('Select a shop to edit.')
+      return
+    }
+
+    setShopMode('edit')
+    setShopForm({
+      name: currentShop.name,
+      publicStatus: currentShop.publicStatus,
+    })
+    setShopModalOpen(true)
+  }
+
+  async function handleSubmitShop(event) {
     event.preventDefault()
 
     if (!shopForm.name.trim()) {
@@ -127,17 +176,22 @@ function Products() {
     setError('')
 
     try {
-      const created = await createShop(token, {
+      const payload = {
         name: shopForm.name.trim(),
         publicStatus: shopForm.publicStatus,
-      })
+      }
+
+      const result =
+        shopMode === 'edit' && selectedShopId
+          ? await updateShop(token, selectedShopId, payload)
+          : await createShop(token, payload)
 
       const updatedShops = await getShops(token)
       setShops(updatedShops)
-      setSelectedShopId(created.id)
+      setSelectedShopId(result.id)
       setShopModalOpen(false)
       setShopForm({ name: '', publicStatus: false })
-      toast.success('Shop created')
+      toast.success(shopMode === 'edit' ? 'Shop updated' : 'Shop created')
       await refreshAll()
     } catch (err) {
       setError(err.message)
@@ -146,6 +200,45 @@ function Products() {
       }
     } finally {
       setCreatingShop(false)
+    }
+  }
+
+  async function handleDeleteShop() {
+    const currentShop = shops.find((shop) => shop.id === selectedShopId)
+    if (!currentShop) {
+      toast.error('Select a shop to delete.')
+      return
+    }
+
+    const confirmed = window.confirm(`Delete ${currentShop.name}? This will remove the shop and its products.`)
+    if (!confirmed) return
+
+    try {
+      await deleteShop(token, currentShop.id)
+      const updatedShops = await getShops(token)
+      setShops(updatedShops)
+      const nextShopId = updatedShops[0]?.id || ''
+      setSelectedShopId(nextShopId)
+      setShopMovements([])
+      toast.success('Shop deleted')
+      if (nextShopId) {
+        const [summaryData, productData, movementData] = await Promise.all([
+          getDashboardSummary(token),
+          getProducts(token, { shopId: nextShopId, search, category, lowStockOnly, sort }),
+          getStockMovements(token, nextShopId),
+        ])
+        setSummary(summaryData)
+        setProducts(productData)
+        setShopMovements(movementData)
+      } else {
+        setSummary(null)
+        setProducts([])
+      }
+    } catch (err) {
+      setError(err.message)
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error(err.message)
+      }
     }
   }
 
@@ -259,8 +352,14 @@ function Products() {
         </select>
 
         <div className="shop-actions">
-          <button type="button" onClick={() => setShopModalOpen(true)}>
+          <button type="button" onClick={openCreateShopModal}>
             + Add Shop
+          </button>
+          <button type="button" className="ghost" onClick={openEditShopModal} disabled={!selectedShopId}>
+            Edit Shop
+          </button>
+          <button type="button" className="ghost danger" onClick={handleDeleteShop} disabled={!selectedShopId}>
+            Delete Shop
           </button>
         </div>
 
@@ -317,6 +416,32 @@ function Products() {
         <EmptyState text="No products yet. Add your first product." />
       ) : null}
 
+      {!loading && selectedShopId ? (
+        <section className="audit-panel">
+          <div className="audit-header">
+            <h3>Recent stock activity</h3>
+            <p>Latest inventory mutations for the selected shop.</p>
+          </div>
+
+          {shopMovements.length ? (
+            <div className="audit-list">
+              {shopMovements.slice(0, 6).map((movement) => (
+                <article key={movement.id} className="audit-item">
+                  <strong>{movement.productName}</strong>
+                  <span>{movement.movementType.replaceAll('_', ' ')}</span>
+                  <small>
+                    {movement.beforeQty} → {movement.afterQty} ({movement.delta >= 0 ? `+${movement.delta}` : movement.delta})
+                  </small>
+                  <small>{movement.reason}</small>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <EmptyState text="No stock activity yet for this shop." />
+          )}
+        </section>
+      ) : null}
+
       <ProductModal
         isOpen={modalState.open}
         mode={modalState.mode}
@@ -329,9 +454,9 @@ function Products() {
       {shopModalOpen ? (
         <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Create shop">
           <div className="modal-card">
-            <h3>Create shop</h3>
+            <h3>{shopMode === 'edit' ? 'Edit shop' : 'Create shop'}</h3>
             <p className="modal-copy">Add another shop anytime and switch between them from the selector above.</p>
-            <form className="modal-form" onSubmit={handleCreateShop}>
+            <form className="modal-form" onSubmit={handleSubmitShop}>
               <label>
                 Shop name
                 <input
