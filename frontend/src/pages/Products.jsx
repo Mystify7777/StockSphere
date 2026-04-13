@@ -258,6 +258,12 @@ function Products() {
           ))}
         </select>
 
+        <div className="shop-actions">
+          <button type="button" onClick={() => setShopModalOpen(true)}>
+            + Add Shop
+          </button>
+        </div>
+
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">All categories</option>
           {categories.map((c) => (
@@ -323,7 +329,8 @@ function Products() {
       {shopModalOpen ? (
         <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Create shop">
           <div className="modal-card">
-            <h3>Create your first shop</h3>
+            <h3>Create shop</h3>
+            <p className="modal-copy">Add another shop anytime and switch between them from the selector above.</p>
             <form className="modal-form" onSubmit={handleCreateShop}>
               <label>
                 Shop name

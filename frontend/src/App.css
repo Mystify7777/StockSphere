@@ -330,6 +330,11 @@
   gap: 0.55rem;
 }
 
+.shop-actions {
+  display: flex;
+  align-items: center;
+}
+
 .controls-row input,
 .controls-row select {
   border: 1px solid #b9d1d8;
@@ -448,6 +453,12 @@ button:disabled {
 
 .modal-card h3 {
   margin: 0;
+}
+
+.modal-copy {
+  margin: 0.4rem 0 0.8rem;
+  color: #486973;
+  font-size: 0.9rem;
 }
 
 .modal-form {
