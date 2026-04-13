@@ -23,8 +23,10 @@ public class StockMovementController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<StockMovementResponse>>> getRecentMovements(@RequestParam UUID shopId,
+                                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                                        @RequestParam(defaultValue = "20") int size,
                                                                                         Authentication authentication) {
-        List<StockMovementResponse> movements = stockMovementService.getRecentMovements(authentication.getName(), shopId);
+        List<StockMovementResponse> movements = stockMovementService.getRecentMovements(authentication.getName(), shopId, page, size);
         return ResponseEntity.ok(ApiResponse.success("Stock movements fetched successfully", movements));
     }
 }

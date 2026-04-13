@@ -9,6 +9,7 @@ import com.stocksphere.product.entity.ProductStatus;
 import com.stocksphere.product.repository.ProductRepository;
 import com.stocksphere.shop.entity.Shop;
 import com.stocksphere.shop.repository.ShopRepository;
+import com.stocksphere.stockmovement.entity.StockMovementType;
 import com.stocksphere.stockmovement.service.StockMovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class ProductService {
             saved.getName(),
             saved.getSku(),
             ownerEmail,
-            "PRODUCT_CREATED",
+            StockMovementType.CREATE,
             0,
             saved.getQty(),
             "Product created"
@@ -122,7 +123,7 @@ public class ProductService {
                 updated.getName(),
                 updated.getSku(),
                 ownerEmail,
-                "PRODUCT_UPDATED",
+                StockMovementType.UPDATE,
                 beforeQty,
                 updated.getQty(),
                 "Product quantity updated"
@@ -140,7 +141,7 @@ public class ProductService {
             product.getName(),
             product.getSku(),
             ownerEmail,
-            "PRODUCT_DELETED",
+            StockMovementType.DELETE,
             product.getQty(),
             0,
             "Product deleted"
@@ -168,7 +169,7 @@ public class ProductService {
             updated.getName(),
             updated.getSku(),
             ownerEmail,
-            "STOCK_ADJUSTED",
+            StockMovementType.ADJUSTMENT,
             beforeQty,
             updated.getQty(),
             "Stock adjusted"

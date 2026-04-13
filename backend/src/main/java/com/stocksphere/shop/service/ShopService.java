@@ -5,6 +5,7 @@ import com.stocksphere.shop.dto.ShopResponse;
 import com.stocksphere.shop.dto.UpdateShopRequest;
 import com.stocksphere.shop.entity.Shop;
 import com.stocksphere.shop.repository.ShopRepository;
+import com.stocksphere.product.repository.ProductRepository;
 import com.stocksphere.user.entity.User;
 import com.stocksphere.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     public ShopResponse createShop(String ownerEmail, CreateShopRequest request) {
         User owner = userRepository.findByEmail(ownerEmail)
@@ -59,6 +61,11 @@ public class ShopService {
     public void deleteShop(String ownerEmail, UUID shopId) {
         Shop shop = shopRepository.findByIdAndOwnerEmail(shopId, ownerEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Shop not found or access denied"));
+
+        if (productRepository.existsByShopId(shopId)) {
+            throw new IllegalStateException("Cannot delete shop with active products");
+        }
+
         shopRepository.delete(shop);
     }
 

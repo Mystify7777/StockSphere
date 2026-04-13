@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByShopIdAndShopOwnerEmailAndNameContainingIgnoreCase(UUID shopId, String ownerEmail, String name);
 
     Optional<Product> findByIdAndShopOwnerEmail(UUID id, String ownerEmail);
+
+    boolean existsByShopId(UUID shopId);
 }

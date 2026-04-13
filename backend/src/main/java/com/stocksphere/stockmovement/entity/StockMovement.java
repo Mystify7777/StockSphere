@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.Index;
 import lombok.Getter;
@@ -40,8 +42,9 @@ public class StockMovement {
     @Column(name = "actor_email", nullable = false, length = 180)
     private String actorEmail;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "movement_type", nullable = false, length = 40)
-    private String movementType;
+    private StockMovementType movementType;
 
     @Column(name = "before_qty", nullable = false)
     private Integer beforeQty;

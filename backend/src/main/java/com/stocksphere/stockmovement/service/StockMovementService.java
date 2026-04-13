@@ -3,8 +3,11 @@ package com.stocksphere.stockmovement.service;
 import com.stocksphere.shop.repository.ShopRepository;
 import com.stocksphere.stockmovement.dto.StockMovementResponse;
 import com.stocksphere.stockmovement.entity.StockMovement;
+import com.stocksphere.stockmovement.entity.StockMovementType;
 import com.stocksphere.stockmovement.repository.StockMovementRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +25,7 @@ public class StockMovementService {
                                String productName,
                                String sku,
                                String actorEmail,
-                               String movementType,
+                               StockMovementType movementType,
                                int beforeQty,
                                int afterQty,
                                String reason) {
@@ -40,11 +43,16 @@ public class StockMovementService {
         stockMovementRepository.save(movement);
     }
 
-    public List<StockMovementResponse> getRecentMovements(String ownerEmail, UUID shopId) {
+    public List<StockMovementResponse> getRecentMovements(String ownerEmail, UUID shopId, int page, int size) {
         shopRepository.findByIdAndOwnerEmail(shopId, ownerEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Shop not found or access denied"));
 
-        return stockMovementRepository.findTop20ByShopIdOrderByCreatedAtDesc(shopId)
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.min(Math.max(size, 1), 100);
+        Pageable pageable = PageRequest.of(safePage, safeSize);
+
+        return stockMovementRepository.findByShopIdOrderByCreatedAtDesc(shopId, pageable)
+            .getContent()
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -58,7 +66,7 @@ public class StockMovementService {
                 movement.getProductName(),
                 movement.getSku(),
                 movement.getActorEmail(),
-                movement.getMovementType(),
+                movement.getMovementType().name(),
                 movement.getBeforeQty(),
                 movement.getAfterQty(),
                 movement.getDelta(),
