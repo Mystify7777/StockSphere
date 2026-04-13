@@ -483,6 +483,12 @@ button:disabled {
   padding: 0.45rem;
 }
 
+.modal-form select {
+  border: 1px solid #b9d1d8;
+  border-radius: 8px;
+  padding: 0.45rem;
+}
+
 .modal-actions {
   grid-column: span 2;
   display: flex;

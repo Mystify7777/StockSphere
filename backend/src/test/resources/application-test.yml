@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:stocksphere_test;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+APP_ENV: development
+
+jwt:
+  secret: test_secret_key_for_integration_tests_1234567890123456
+  expiration-ms: 900000
+
+cors:
+  allowed-origins: http://localhost:5173

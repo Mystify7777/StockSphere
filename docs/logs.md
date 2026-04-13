@@ -560,3 +560,47 @@ Write painful mistakes here so future-you stops behaving like current-you.
 ### Next Steps
 - Redeploy frontend with `VITE_API_BASE_URL=https://stocksphere-4xt1.onrender.com/api`
 - Execute live test flow: register, login, dashboard, products CRUD, logout, refresh
+
+---
+
+## [2026-04-13] Inter-Shop Stock Transfer Sprint
+
+### Completed
+- Added owner-scoped transfer endpoint: `POST /api/stock-transfers`
+- Added transfer DTOs and response contracts
+- Implemented transactional transfer service with strict ownership checks on both source and destination shops
+- Enforced transfer validations:
+  - `fromShopId != toShopId`
+  - `quantity > 0`
+  - source product exists under source shop ownership
+  - source quantity is sufficient before transfer
+- Implemented destination SKU merge logic:
+  - add to existing destination product when SKU exists
+  - create destination product copy when SKU is missing
+- Added transfer audit movement types: `TRANSFER_OUT` and `TRANSFER_IN`
+- Added dual movement writes per transfer for full traceability
+- Added frontend transfer flow in products table with modal UX (`To Shop`, `Quantity`)
+- Added transfer API client integration and post-transfer data refresh (products + activity panel)
+- Added loading guard to prevent transfer double-submit (`Transferring...` state)
+- Verified backend package build (`mvn clean package -DskipTests`)
+- Verified frontend production build (`npm run build`)
+
+### In Progress
+- Manual smoke validation of transfer edge cases on live deployment
+
+### Issues
+- None blocking in build/compile stage; runtime smoke checks still pending
+
+### Decisions
+- Keep transfer as a dedicated module (`stocktransfer`) to avoid coupling with existing product CRUD endpoints
+- Keep ownership validation at service layer for both shop IDs and source product lookup
+- Keep transfer writes transactional so partial mutations cannot persist
+
+### Next Steps
+- Run live checklist:
+  - transfer between two owned shops
+  - verify source qty decreases
+  - verify destination qty increases (or product created once)
+  - verify no duplicate SKU product in destination
+  - verify `TRANSFER_OUT` and `TRANSFER_IN` entries in activity logs
+- Add integration tests for transfer success and failure scenarios

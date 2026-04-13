@@ -101,6 +101,7 @@ Phase 1 -> MVP Core + Deployment
 
 ## Inventory Power Features
 
+- [x] Inter-shop stock transfer
 - [ ] Bulk stock add
 - [ ] Bulk stock remove
 - [ ] CSV import
@@ -121,8 +122,8 @@ Phase 1 -> MVP Core + Deployment
 
 ## Logs
 
-- [ ] Stock movement history
-- [ ] Audit trail
+- [x] Stock movement history
+- [x] Audit trail
 
 ---
 
@@ -161,9 +162,9 @@ Because modern apps must shimmer while failing.
 - [x] Shop
 - [x] Product
 - [x] Category
+- [x] StockMovement
 - [ ] Inquiry
 - [ ] Notification
-- [ ] StockMovement
 
 ---
 
@@ -188,6 +189,14 @@ Because modern apps must shimmer while failing.
 - [x] POST /api/products
 - [x] PUT /api/products/{id}
 - [x] DELETE /api/products/{id}
+
+## Stock Movements
+
+- [x] GET /api/stock-movements
+
+## Stock Transfers
+
+- [x] POST /api/stock-transfers
 
 ## Product Data Model
 

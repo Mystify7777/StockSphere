@@ -127,6 +127,14 @@ export function patchStock(token, productId, delta) {
   })
 }
 
+export function transferStock(token, payload) {
+  return apiRequest('/stock-transfers', {
+    method: 'POST',
+    token,
+    body: payload,
+  })
+}
+
 export function getStockMovements(token, shopId) {
   const params = new URLSearchParams()
   params.set('shopId', shopId)

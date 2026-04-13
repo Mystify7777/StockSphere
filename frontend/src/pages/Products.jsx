@@ -15,6 +15,7 @@ import {
   getStockMovements,
   getShops,
   patchStock,
+  transferStock,
   updateShop,
   updateProduct,
 } from '../services/productApi'
@@ -40,6 +41,14 @@ function Products() {
   const [shopForm, setShopForm] = useState({ name: '', publicStatus: false })
   const [shopMode, setShopMode] = useState('create')
   const [shopMovements, setShopMovements] = useState([])
+  const [transferModal, setTransferModal] = useState({
+    open: false,
+    product: null,
+    toShopId: '',
+    quantity: '1',
+    error: '',
+  })
+  const [transferring, setTransferring] = useState(false)
 
   const categories = useMemo(() => {
     return Array.from(new Set(products.map((item) => item.category))).sort()
@@ -271,6 +280,96 @@ function Products() {
     }
   }
 
+  function openTransferModal(product) {
+    if (!selectedShopId) {
+      toast.error('Select a source shop first.')
+      return
+    }
+
+    const destinationChoices = shops.filter((shop) => shop.id !== selectedShopId)
+    if (!destinationChoices.length) {
+      toast.error('Create another shop before transferring stock.')
+      return
+    }
+
+    setTransferModal({
+      open: true,
+      product,
+      toShopId: destinationChoices[0].id,
+      quantity: '1',
+      error: '',
+    })
+  }
+
+  function closeTransferModal() {
+    setTransferModal({
+      open: false,
+      product: null,
+      toShopId: '',
+      quantity: '1',
+      error: '',
+    })
+  }
+
+  async function handleTransferSubmit(event) {
+    event.preventDefault()
+
+    if (!transferModal.product || !selectedShopId) {
+      setTransferModal((prev) => ({ ...prev, error: 'Please select a valid source shop and product.' }))
+      return
+    }
+
+    const quantity = Number(transferModal.quantity)
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      setTransferModal((prev) => ({ ...prev, error: 'Quantity must be a positive whole number.' }))
+      return
+    }
+
+    if (!transferModal.toShopId) {
+      setTransferModal((prev) => ({ ...prev, error: 'Select a destination shop.' }))
+      return
+    }
+
+    if (transferModal.toShopId === selectedShopId) {
+      setTransferModal((prev) => ({ ...prev, error: 'Source and destination shop cannot be same.' }))
+      return
+    }
+
+    if (quantity > transferModal.product.qty) {
+      setTransferModal((prev) => ({
+        ...prev,
+        error: `Cannot transfer more than available stock (${transferModal.product.qty}).`,
+      }))
+      return
+    }
+
+    const destinationShopName = shops.find((shop) => shop.id === transferModal.toShopId)?.name || 'destination shop'
+
+    setTransferring(true)
+    setTransferModal((prev) => ({ ...prev, error: '' }))
+    setError('')
+
+    try {
+      await transferStock(token, {
+        productId: transferModal.product.id,
+        fromShopId: selectedShopId,
+        toShopId: transferModal.toShopId,
+        quantity,
+      })
+      toast.success(`Stock transferred to ${destinationShopName}`)
+      closeTransferModal()
+      await refreshAll()
+    } catch (err) {
+      setTransferModal((prev) => ({ ...prev, error: err.message }))
+      setError(err.message)
+      if (err.status !== 401 && err.status !== 403) {
+        toast.error(err.message)
+      }
+    } finally {
+      setTransferring(false)
+    }
+  }
+
   function openAddModal() {
     setModalState({ open: true, mode: 'add', product: null })
   }
@@ -409,6 +508,7 @@ function Products() {
           onEdit={openEditModal}
           onDelete={handleDelete}
           onAdjustStock={handleAdjust}
+          onTransfer={openTransferModal}
         />
       ) : null}
 
@@ -495,6 +595,72 @@ function Products() {
                 </button>
                 <button type="submit" disabled={creatingShop}>
                   {creatingShop ? <Loader text="Creating..." /> : 'Create Shop'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
+      {transferModal.open && transferModal.product ? (
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Transfer stock">
+          <div className="modal-card">
+            <h3>Transfer stock</h3>
+            <p className="modal-copy">Move quantity for {transferModal.product.name} ({transferModal.product.sku}) to another owned shop.</p>
+
+            {transferModal.error ? <div className="error-box">{transferModal.error}</div> : null}
+
+            <form className="modal-form" onSubmit={handleTransferSubmit}>
+              <label>
+                To shop
+                <select
+                  value={transferModal.toShopId}
+                  onChange={(event) =>
+                    setTransferModal((prev) => ({
+                      ...prev,
+                      toShopId: event.target.value,
+                      error: '',
+                    }))
+                  }
+                  disabled={transferring}
+                  required
+                >
+                  {shops
+                    .filter((shop) => shop.id !== selectedShopId)
+                    .map((shop) => (
+                      <option key={shop.id} value={shop.id}>{shop.name}</option>
+                    ))}
+                </select>
+              </label>
+
+              <label>
+                Quantity
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={transferModal.quantity}
+                  onChange={(event) => {
+                    const raw = event.target.value.trim()
+                    if (raw === '' || /^\d+$/.test(raw)) {
+                      setTransferModal((prev) => ({
+                        ...prev,
+                        quantity: raw,
+                        error: '',
+                      }))
+                    }
+                  }}
+                  disabled={transferring}
+                  required
+                />
+              </label>
+
+              <div className="modal-actions">
+                <button type="button" className="ghost" onClick={closeTransferModal} disabled={transferring}>
+                  Cancel
+                </button>
+                <button type="submit" disabled={transferring}>
+                  {transferring ? 'Transferring...' : 'Transfer'}
                 </button>
               </div>
             </form>

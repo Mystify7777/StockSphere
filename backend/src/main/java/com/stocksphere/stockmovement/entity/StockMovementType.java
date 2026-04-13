@@ -7,5 +7,7 @@ public enum StockMovementType {
     DELETE,
     SALE,
     PURCHASE,
-    TRANSFER
+    TRANSFER,
+    TRANSFER_OUT,
+    TRANSFER_IN
 }

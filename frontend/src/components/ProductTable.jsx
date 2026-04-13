@@ -8,7 +8,7 @@ function statusLabel(product) {
   return { text: 'Healthy', type: 'ok' }
 }
 
-function ProductTable({ products, onEdit, onDelete, onAdjustStock }) {
+function ProductTable({ products, onEdit, onDelete, onAdjustStock, onTransfer }) {
   if (!products.length) {
     return <div className="empty-state">No products yet. Add your first inventory item.</div>
   }
@@ -49,6 +49,7 @@ function ProductTable({ products, onEdit, onDelete, onAdjustStock }) {
                   <div className="row-actions">
                     <button type="button" onClick={() => onEdit(product)} className="mini">Edit</button>
                     <button type="button" onClick={() => onDelete(product)} className="mini danger">Delete</button>
+                    <button type="button" onClick={() => onTransfer(product)} className="mini">Transfer</button>
                     <button type="button" onClick={() => onAdjustStock(product, 1)} className="mini">+1</button>
                     <button type="button" onClick={() => onAdjustStock(product, 5)} className="mini">+5</button>
                     <button type="button" onClick={() => onAdjustStock(product, -1)} className="mini">-1</button>

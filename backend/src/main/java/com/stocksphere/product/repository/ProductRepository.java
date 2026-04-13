@@ -16,5 +16,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Optional<Product> findByIdAndShopOwnerEmail(UUID id, String ownerEmail);
 
+    Optional<Product> findByIdAndShopIdAndShopOwnerEmail(UUID id, UUID shopId, String ownerEmail);
+
+    Optional<Product> findByShopIdAndSku(UUID shopId, String sku);
+
     boolean existsByShopId(UUID shopId);
 }

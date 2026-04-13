@@ -21,11 +21,14 @@ Goal: ship a real usable product in stages instead of constructing a glorious un
 - Product management UX polish: toasts, loaders, empty states
 - Backend environment-variable hardening for DB/JWT/CORS
 - Backend containerization with Docker for Render deployment
+- Stock movement history panel with backend movement APIs
+- Inter-shop stock transfer (owner-only) with transactional safety and movement audits (`TRANSFER_OUT` / `TRANSFER_IN`)
 
 ## Current Focus
 
-- Production smoke testing and stabilization
-- Next feature wave: stock movement logs, staff access, low-stock notifications
+- Production smoke testing for transfer flow and data integrity
+- Backend integration tests for auth, shops, products, and stock transfers
+- Next feature wave: staff access and low-stock notifications
 
 ---
 

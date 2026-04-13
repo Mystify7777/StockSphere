@@ -45,6 +45,11 @@ Current reality: the app is usable and deployable, but reliability and operation
   - no-shop empty state CTA
   - create-shop modal
   - shop creation + refresh + auto-select
+- Added inter-shop stock transfer UX from product rows:
+  - transfer button per product
+  - transfer modal (destination shop + quantity)
+  - loading-disabled submit state
+  - refresh products and stock activity after successful transfer
 
 ### Backend
 
@@ -56,6 +61,13 @@ Current reality: the app is usable and deployable, but reliability and operation
   - JPA_DDL_AUTO is update
   - JPA_SHOW_SQL is true
 - Extended env template with new config keys
+- Added stock movement module with owner-scoped fetch and movement audit records
+- Added inter-shop transfer API `POST /api/stock-transfers` with transactional safety:
+  - ownership validation for both shops
+  - source/destination shop mismatch validation
+  - source stock sufficiency validation
+  - SKU-based destination merge-or-create behavior
+  - paired movement entries: `TRANSFER_OUT` and `TRANSFER_IN`
 
 ### Documentation
 
@@ -175,6 +187,7 @@ Severity model:
 - auth register/login/me
 - shops create/list
 - product create/list/update/delete/stock patch
+- stock transfer success/failure paths and movement audit writes
 
 2. Add frontend critical-flow tests for:
 - login/register validation

@@ -92,6 +92,7 @@ Uses platform for:
 - Edit product
 - Delete product
 - Bulk stock increase/decrease
+- Inter-shop stock transfer (owner-owned shops only)
 - Search / sort / filter
 
 ## Module D: Notifications

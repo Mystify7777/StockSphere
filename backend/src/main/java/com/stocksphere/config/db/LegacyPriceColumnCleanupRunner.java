@@ -7,16 +7,28 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class LegacyPriceColumnCleanupRunner implements ApplicationRunner {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DataSource dataSource;
 
     @Override
     public void run(ApplicationArguments args) {
         try {
+            try (Connection connection = dataSource.getConnection()) {
+                String databaseProduct = connection.getMetaData().getDatabaseProductName();
+                if (databaseProduct == null || !databaseProduct.toLowerCase().contains("mysql")) {
+                    log.debug("Skipping legacy products.price cleanup for database: {}", databaseProduct);
+                    return;
+                }
+            }
+
             Integer count = jdbcTemplate.queryForObject(
                     """
                     SELECT COUNT(*)
