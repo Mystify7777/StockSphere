@@ -15,9 +15,9 @@ spring:
     password: ${DB_PASSWORD:0990}
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO:update}
+    open-in-view: false
     show-sql: ${JPA_SHOW_SQL:true}
     properties:
       hibernate:
