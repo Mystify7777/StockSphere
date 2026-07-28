@@ -10,9 +10,9 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:stocksphere}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:0990}
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslMode=${DB_SSL_MODE:DISABLED}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
