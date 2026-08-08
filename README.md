@@ -1,9 +1,4 @@
 # StockSphere
-
-> ⚠️⚠️ Due to some conflict between smtp and resend, the authorization isn't working for now as it requires an otp. I am trying to look for a workaround that doesn't requires me investing, I am broke..
-> You can use this credential to visit in user mode. <br>
-> email : `aryankumar.55566@gmail.com` <br>
-> pass : `q1w2e3r4!`
  
 Multi-tenant inventory management platform for shop owners with optional public storefront discovery.
 
